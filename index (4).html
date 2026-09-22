@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CraveCrafters | Chennai</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#050308;--panel:#100a18;--panel2:#171022;--purple:#8b3dff;--purple2:#c47cff;--gold:#f6d47d;--cream:#fff4cf;--pink:#ff66c4}
+body{font-family:Inter,Arial,sans-serif;background:var(--bg);color:#fff;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 10%,#7427a51c,transparent 28%),radial-gradient(circle at 80% 45%,#8b3dff12,transparent 30%);z-index:-1}
+button,input{font:inherit}
+button{cursor:pointer}
+.header{height:74px;position:sticky;top:0;z-index:90;background:#07050bdc;backdrop-filter:blur(18px);border-bottom:1px solid #b25cff35}
+.nav{max-width:1280px;height:100%;margin:auto;padding:0 24px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;min-width:255px}
+.brand-logo{width:48px;height:48px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:24px;box-shadow:0 0 22px #8b3dff55;animation:logoFloat 3s ease-in-out infinite}
+.brand-name{font:700 27px Georgia;color:var(--cream);line-height:.9}.brand-name small{display:block;font:600 8px Arial;letter-spacing:3px;color:#cda8e7;margin-top:5px}
+.links{display:flex;gap:25px;align-items:center}.links a{color:#eee;text-decoration:none;font-size:14px}.links a:first-child{color:var(--gold)}
+.search{margin-left:auto;width:245px;padding:10px 15px;border-radius:24px;border:1px solid #b25cff55;background:#1a1224;color:#fff;outline:0}.search:focus{box-shadow:0 0 20px #8b3dff33}
+.loc{display:flex;gap:7px;align-items:center;font-size:13px;white-space:nowrap}.loc b{color:#fff}.loc span{color:var(--gold)}
+.topcart{border:1px solid #d99cff55;background:#231137;color:#fff;border-radius:12px;padding:10px 13px;position:relative}.topcart b{background:#a348ff;border-radius:50%;padding:2px 6px;margin-left:4px}
+.hero{max-width:1280px;min-height:355px;margin:18px auto 0;border:1px solid #a85cff35;border-radius:24px;overflow:hidden;position:relative;background:linear-gradient(90deg,#070409f5 0%,#070409c9 45%,#07040925 100%),url("https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1800&q=90") center/cover}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,#ffd86d16 48%,transparent 60%);transform:translateX(-100%);animation:shine 7s infinite}
+.hero-content{position:relative;z-index:2;padding:58px 50px;max-width:720px;animation:rise .8s ease both}.eyebrow{color:#e8a9ff;letter-spacing:4px;font-size:11px;font-weight:700}.hero h1{font:700 clamp(42px,6vw,69px) Georgia;line-height:.98;margin:14px 0}.hero h1 span{color:var(--gold)}.hero p{color:#ddd;line-height:1.6;max-width:560px;margin-bottom:20px}.primary{border:1px solid #f6d47d66;background:linear-gradient(135deg,#a849ff,#5c1ca1);color:#fff;padding:13px 25px;border-radius:28px;font-weight:700;box-shadow:0 0 28px #8b3dff3a;transition:.25s}.primary:hover{transform:translateY(-3px);box-shadow:0 0 36px #a348ff75}.stats{display:flex;gap:50px;margin-top:27px}.stats strong{display:block;font:700 24px Georgia;color:var(--cream)}.stats small{color:#bbb}
+.hero-note{position:absolute;right:10%;top:26%;z-index:2;color:var(--gold);font:italic 22px Georgia;transform:rotate(-8deg);animation:sway 4s ease-in-out infinite}
+.categories{max-width:1280px;margin:0 auto;border:1px solid #b25cff25;border-top:0;padding:15px 22px;display:flex;justify-content:space-between;gap:8px;overflow:auto;background:#0a0610}.category{min-width:82px;background:none;border:0;color:#ddd}.category .icon{width:52px;height:52px;margin:auto auto 7px;border-radius:50%;display:grid;place-items:center;border:1px solid #c47cff55;background:radial-gradient(circle,#3a1850,#100918);font-size:23px;transition:.25s}.category:hover .icon,.category.active .icon{border-color:var(--gold);box-shadow:0 0 22px #a348ff5c;transform:translateY(-4px)}.category.active{color:var(--gold)}
+.menu{max-width:1280px;margin:28px auto;padding:0 22px}.menu-top{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.section-kicker{font-size:10px;letter-spacing:4px;color:#d68eff}.menu h2{font:700 32px Georgia;margin-top:5px}.perks{display:flex;gap:20px;color:#aaa;font-size:12px}.perks b{color:#caffb5}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.card{background:linear-gradient(145deg,#171020,#0c0810);border:1px solid #b25cff35;border-radius:14px;overflow:hidden;transition:.3s;animation:cardIn .6s both}.card:hover{transform:translateY(-7px);border-color:#e5b1ff66;box-shadow:0 16px 40px #000b,0 0 22px #8b3dff18}.pic{height:158px;position:relative;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover;transition:.5s}.card:hover .pic img{transform:scale(1.08)}.tag{position:absolute;top:9px;right:9px;background:#ff4c28;border-radius:8px;padding:4px 7px;font-size:10px;font-weight:800}.heart{position:absolute;top:8px;left:8px;border:0;background:#09060a99;color:#fff;border-radius:50%;width:28px;height:28px}.body{padding:11px}.body h3{font:700 16px Georgia;margin-bottom:5px}.category-text{font-size:11px;color:#999}.rating{font-size:11px;color:#ddd;margin-top:5px}.price{color:var(--gold);font-weight:800;font-size:17px;margin:9px 0}.add{width:100%;padding:9px;border-radius:9px;border:1px solid #f6d47d55;background:#2a143c;color:#fff;font-size:12px;font-weight:700;transition:.2s}.add:hover{background:#6e2bb0;box-shadow:0 0 15px #a348ff55}
+.offer{max-width:1280px;margin:22px auto 35px;border:1px solid #b25cff45;border-radius:15px;background:linear-gradient(90deg,#21112f,#110a17);padding:18px 24px;display:flex;align-items:center;gap:22px}.offer-icon{font-size:32px}.offer h3{font:700 20px Georgia;color:var(--cream)}.offer p{color:#aaa;font-size:12px;margin-top:4px}.offer-boxes{margin-left:auto;display:flex;gap:10px}.offer-box{border:1px solid #b25cff45;border-radius:10px;padding:10px 18px;text-align:center;min-width:145px}.offer-box b{display:block;color:var(--cream);font-size:13px}.offer-box small{color:#aaa}
+.footer{border-top:1px solid #b25cff22;padding:25px 5%;display:flex;justify-content:space-between;color:#999;font-size:12px}.footer strong{color:var(--cream);font:700 20px Georgia}
+.overlay{display:none;position:fixed;inset:0;background:#0009;z-index:100}.overlay.show{display:block}.cart{position:fixed;right:-430px;top:0;height:100vh;width:min(430px,94vw);background:#0b0710;border-left:1px solid #e1a7ff66;z-index:101;transition:.3s;display:flex;flex-direction:column;box-shadow:-20px 0 60px #000b}.cart.show{right:0}.cart-head{padding:20px;border-bottom:1px solid #ffffff12;display:flex;justify-content:space-between}.cart-head h2{font:700 24px Georgia;color:var(--cream)}.close{border:0;background:none;color:#fff;font-size:28px}.cart-items{flex:1;overflow:auto;padding:10px 18px}.empty{text-align:center;color:#999;padding:70px 10px}.cart-row{display:grid;grid-template-columns:62px 1fr auto;gap:11px;padding:14px 0;border-bottom:1px solid #ffffff10;align-items:center}.cart-row img{width:62px;height:62px;border-radius:11px;object-fit:cover}.cart-row h4{font:700 14px Georgia}.cart-price{color:var(--gold);font-size:12px;margin-top:4px}.qty{display:flex;gap:7px;align-items:center;margin-top:7px}.qty button{width:29px;height:28px;border-radius:7px;border:1px solid #c47cff55;background:#261238;color:#fff}.remove{border:0!important;background:none!important;color:#bda7c8!important;width:auto!important}.summary{padding:18px;border-top:1px solid #ffffff12}.line{display:flex;justify-content:space-between;color:#bbb;margin:8px 0;font-size:13px}.total{font-size:19px;color:var(--cream);font-weight:800}.checkout{width:100%;margin-top:10px}.clear{width:100%;margin-top:8px;border:0;background:none;color:#aaa;padding:8px}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes shine{70%,100%{transform:translateX(100%)}}@keyframes logoFloat{50%{transform:translateY(-4px)}}@keyframes sway{50%{transform:rotate(-4deg) translateY(-5px)}}
+@media(max-width:1050px){.links{display:none}.grid{grid-template-columns:repeat(3,1fr)}.perks{display:none}}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.brand{min-width:auto}.brand-name{font-size:21px}.search{display:none}.hero-content{padding:45px 25px}.stats{gap:22px}.hero-note{display:none}.offer{margin:18px;padding:15px;flex-wrap:wrap}.offer-boxes{margin-left:0;overflow:auto;width:100%}}@media(max-width:470px){.grid{grid-template-columns:1fr}.loc{display:none}.hero h1{font-size:43px}}
+</style>
+</head>
+<body>
+<header class="header"><nav class="nav">
+<div class="brand"><div class="brand-logo">♛</div><div class="brand-name">CraveCrafters<small>TASTE • TRAVEL • TOGETHER</small></div></div>
+<div class="links"><a href="#">Home</a><a href="#menu">Menu</a><a href="#offers">Offers</a><a href="#">Our Story</a><a href="#">Contact</a></div>
+<input id="search" class="search" placeholder="⌕  Search for dishes, cuisines...">
+<div class="loc">📍 <span>Deliver to</span> <b>Chennai</b>⌄</div>
+<button class="topcart" id="openCart">🛒 <b id="count">0</b></button>
+</nav></header>
+
+<section class="hero"><div class="hero-content">
+<div class="eyebrow">GOOD FOOD • GOOD MOOD</div><h1>Crafted Cravings,<br><span>Royal Experiences</span></h1>
+<p>From the streets of India to global flavours — handpicked, freshly prepared, and delivered with love in Chennai.</p>
+<button class="primary" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Order Now →</button>
+<div class="stats"><div><strong>500+</strong><small>Dishes</small></div><div><strong>50+</strong><small>Cuisines</small></div><div><strong>1M+</strong><small>Happy Foodies</small></div></div>
+</div><div class="hero-note">Good Food<br>Brighter Days ♡</div></section>
+
+<div class="categories" id="cats"></div>
+
+<section class="menu" id="menu">
+<div class="menu-top"><div><div class="section-kicker">EXPLORE OUR MENU</div><h2>A World of Flavours ✦</h2></div><div class="perks"><span>🌿 <b>Freshly crafted</b></span><span>♛ <b>Premium ingredients</b></span><span>♥ <b>Delivered with love</b></span></div></div>
+<div class="grid" id="grid"></div></section>
+
+<section class="offer" id="offers"><div class="offer-icon">🎁</div><div><h3>Special Offers for Chennai Foodies!</h3><p>Great food, greater deals — only on CraveCrafters.</p></div><div class="offer-boxes"><div class="offer-box"><b>20% OFF</b><small>Orders above ₹499</small></div><div class="offer-box"><b>FREE DELIVERY</b><small>Orders above ₹299</small></div><div class="offer-box"><b>COMBO MEALS</b><small>Starting ₹199</small></div></div></section>
+
+<footer class="footer"><strong>♛ CraveCrafters</strong><span>© 2026 CraveCrafters • Made with ♥ in Chennai.</span><span>Privacy • Terms • Help</span></footer>
+
+<div class="overlay" id="overlay"></div><aside class="cart" id="cart">
+<div class="cart-head"><h2>♛ Your Cart (<span id="cartCount">0</span>)</h2><button class="close" id="close">×</button></div>
+<div class="cart-items" id="items"></div><div class="summary" id="summary"></div></aside>
+
+<script>
+const foods=[
+["Paneer Butter Masala","North Indian",249,"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=90","Bestseller"],
+["Masala Dosa","South Indian",149,"https://images.unsplash.com/photo-1630383249896-424e482df921?auto=format&fit=crop&w=800&q=90","Popular"],
+["Margherita Pizza","Pizza",299,"https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=800&q=90","Cheesy"],
+["Veg Hakka Noodles","Chinese",199,"https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?auto=format&fit=crop&w=800&q=90","Hot"],
+["Classic Burger","Burgers",189,"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=90","New"],
+["Chole Bhature","North Indian",179,"https://images.unsplash.com/photo-1626132647523-66f5bf380027?auto=format&fit=crop&w=800&q=90","Authentic"],
+["Idli Sambar","South Indian",99,"https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=90","Healthy"],
+["Paneer Tikka","North Indian",269,"https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?auto=format&fit=crop&w=800&q=90","Grilled"],
+["French Fries","Fast Food",129,"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=90","Crispy"],
+["Chocolate Lava Cake","Desserts",189,"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=90","Indulgent"]
+];
+let cartData=[];let selected="All";
+const cats=["All",...new Set(foods.map(x=>x[1]))];
+function renderCats(){document.getElementById("cats").innerHTML=cats.map((c,i)=>`<button class="category ${i===0?"active":""}" onclick="choose(this,'${c}')"><div class="icon">${({All:"♛","North Indian":"🍛","South Indian":"🥘","Chinese":"🥢","Pizza":"🍕","Burgers":"🍔","Fast Food":"🍟","Drinks":"🥤","Desserts":"🍰","Healthy":"🌿"})[c]||"🍽️"}</div>${c}</button>`).join("")}
+function choose(btn,c){document.querySelectorAll(".category").forEach(x=>x.classList.remove("active"));btn.classList.add("active");selected=c;render()}
+function render(){let q=document.getElementById("search").value.toLowerCase();let list=foods.filter(x=>(selected==="All"||x[1]===selected)&&x[0].toLowerCase().includes(q));document.getElementById("grid").innerHTML=list.map((x,i)=>`<article class="card"><div class="pic"><img src="${x[3]}" alt="${x[0]}" onerror="this.src='https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80'"><span class="tag">${x[4]}</span><button class="heart">♡</button></div><div class="body"><h3>${x[0]}</h3><div class="category-text">${x[1]}</div><div class="rating">★ 4.7 • 20–35 mins</div><div class="price">₹${x[2]}</div><button class="add" onclick="add(${foods.indexOf(x)})">♛ Add to Cart</button></div></article>`).join("")}
+function add(i){let f=foods[i],x=cartData.find(a=>a.name===f[0]);if(x)x.qty++;else cartData.push({name:f[0],price:f[2],image:f[3],qty:1});drawCart();openCart()}
+function plus(n){let x=cartData.find(a=>a.name===n);if(x)x.qty++;drawCart()}
+function minus(n){let x=cartData.find(a=>a.name===n);if(!x)return;x.qty--;if(x.qty<1)cartData=cartData.filter(a=>a.name!==n);drawCart()}
+function removeIt(n){cartData=cartData.filter(a=>a.name!==n);drawCart()}
+function drawCart(){let count=cartData.reduce((s,x)=>s+x.qty,0);document.getElementById("count").textContent=count;document.getElementById("cartCount").textContent=count;let sub=cartData.reduce((s,x)=>s+x.price*x.qty,0),del=sub?40:0,plat=sub?15:0,tax=Math.round(sub*.05),total=sub+del+plat+tax;document.getElementById("items").innerHTML=cartData.length?cartData.map(x=>`<div class="cart-row"><img src="${x.image}"><div><h4>${x.name}</h4><div class="cart-price">₹${x.price}</div><div class="qty"><button onclick="minus(${JSON.stringify(x.name)})">−</button><b>${x.qty}</b><button onclick="plus(${JSON.stringify(x.name)})">+</button><button class="remove" onclick="removeIt(${JSON.stringify(x.name)})">Remove</button></div></div><b>₹${x.price*x.qty}</b></div>`).join(""):"<div class='empty'>Your cart is empty 🛒<br>Add something delicious!</div>";document.getElementById("summary").innerHTML=`<div class="line"><span>Subtotal</span><b>₹${sub}</b></div><div class="line"><span>Delivery Fee</span><b>₹${del}</b></div><div class="line"><span>Platform Fee</span><b>₹${plat}</b></div><div class="line"><span>GST (5%)</span><b>₹${tax}</b></div><div class="line total"><span>Total</span><b>₹${total}</b></div><button class="primary checkout" onclick="checkout()" ${cartData.length?"":"disabled"}>♛ Place Order</button><button class="clear" onclick="cartData=[];drawCart()">Clear Cart</button>`}
+function openCart(){document.getElementById("cart").classList.add("show");document.getElementById("overlay").classList.add("show")}
+function closeCart(){document.getElementById("cart").classList.remove("show");document.getElementById("overlay").classList.remove("show")}
+function checkout(){if(!cartData.length)return;let sub=cartData.reduce((s,x)=>s+x.price*x.qty,0),total=sub+40+15+Math.round(sub*.05);alert("🎉 Order confirmed!\\n\\n📍 Chennai\\n💰 Total: ₹"+total);cartData=[];drawCart();closeCart()}
+document.getElementById("openCart").onclick=openCart;document.getElementById("close").onclick=closeCart;document.getElementById("overlay").onclick=closeCart;document.getElementById("search").oninput=render;renderCats();render();drawCart();
+</script>
+</body>
+</html>
