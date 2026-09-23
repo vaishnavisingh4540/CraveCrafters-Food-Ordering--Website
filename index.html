@@ -33,6 +33,10 @@ button{cursor:pointer}
 @keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes shine{70%,100%{transform:translateX(100%)}}@keyframes logoFloat{50%{transform:translateY(-4px)}}@keyframes sway{50%{transform:rotate(-4deg) translateY(-5px)}}
 @media(max-width:1050px){.links{display:none}.grid{grid-template-columns:repeat(3,1fr)}.perks{display:none}}@media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.brand{min-width:auto}.brand-name{font-size:21px}.search{display:none}.hero-content{padding:45px 25px}.stats{gap:22px}.hero-note{display:none}.offer{margin:18px;padding:15px;flex-wrap:wrap}.offer-boxes{margin-left:0;overflow:auto;width:100%}}@media(max-width:470px){.grid{grid-template-columns:1fr}.loc{display:none}.hero h1{font-size:43px}}
 </style>
+
+<style>
+.order-modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}.order-modal.show{display:flex}.order-box{width:min(420px,100%);background:#120d18;border:1px solid rgba(212,175,55,.45);border-radius:22px;padding:28px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.55);animation:pop .25s ease}.order-icon{font-size:48px;margin-bottom:8px}.order-box h2{margin:0 0 8px;color:#f3c969}.order-box p{margin:8px 0;color:#ddd}.order-details{margin:18px 0;padding:14px;border-radius:14px;background:#1d1524;text-align:left}.order-details div{display:flex;justify-content:space-between;gap:15px;margin:8px 0}.order-details span{color:#aaa}.order-details b{color:#fff}.order-ok{width:100%;border:0;border-radius:12px;padding:12px;background:linear-gradient(135deg,#d4af37,#f3d37a);color:#120d18;font-weight:800;cursor:pointer}@keyframes pop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
 </head>
 <body>
 <header class="header"><nav class="nav">
@@ -64,6 +68,20 @@ button{cursor:pointer}
 <div class="cart-head"><h2>♛ Your Cart (<span id="cartCount">0</span>)</h2><button class="close" id="close">×</button></div>
 <div class="cart-items" id="items"></div><div class="summary" id="summary"></div></aside>
 
+
+<div class="order-modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+  <div class="order-box">
+    <div class="order-icon">🎉</div>
+    <h2 id="orderTitle">Order Confirmed!</h2>
+    <p>Thank you for ordering from CraveCrafters.</p>
+    <div class="order-details">
+      <div><span>📍 Delivery</span><b>Chennai</b></div>
+      <div><span>🛍 Items</span><b id="orderItems">0</b></div>
+      <div><span>💰 Total</span><b id="orderTotal">₹0</b></div>
+    </div>
+    <button class="order-ok" id="orderOk" type="button">Done</button>
+  </div>
+</div>
 <script>
 const foods=[
 ["Paneer Butter Masala","North Indian",249,"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=800&q=90","Bestseller"],
@@ -77,20 +95,126 @@ const foods=[
 ["French Fries","Fast Food",129,"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=90","Crispy"],
 ["Chocolate Lava Cake","Desserts",189,"https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=90","Indulgent"]
 ];
-let cartData=[];let selected="All";
+
+let selected="All";
+let cartData=[];
+try { cartData=JSON.parse(localStorage.getItem("cravecraftersCart")||"[]"); } catch(e){ cartData=[]; }
+
+const $=id=>document.getElementById(id);
 const cats=["All",...new Set(foods.map(x=>x[1]))];
-function renderCats(){document.getElementById("cats").innerHTML=cats.map((c,i)=>`<button class="category ${i===0?"active":""}" onclick="choose(this,'${c}')"><div class="icon">${({All:"♛","North Indian":"🍛","South Indian":"🥘","Chinese":"🥢","Pizza":"🍕","Burgers":"🍔","Fast Food":"🍟","Drinks":"🥤","Desserts":"🍰","Healthy":"🌿"})[c]||"🍽️"}</div>${c}</button>`).join("")}
-function choose(btn,c){document.querySelectorAll(".category").forEach(x=>x.classList.remove("active"));btn.classList.add("active");selected=c;render()}
-function render(){let q=document.getElementById("search").value.toLowerCase();let list=foods.filter(x=>(selected==="All"||x[1]===selected)&&x[0].toLowerCase().includes(q));document.getElementById("grid").innerHTML=list.map((x,i)=>`<article class="card"><div class="pic"><img src="${x[3]}" alt="${x[0]}" onerror="this.src='https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80'"><span class="tag">${x[4]}</span><button class="heart">♡</button></div><div class="body"><h3>${x[0]}</h3><div class="category-text">${x[1]}</div><div class="rating">★ 4.7 • 20–35 mins</div><div class="price">₹${x[2]}</div><button class="add" onclick="add(${foods.indexOf(x)})">♛ Add to Cart</button></div></article>`).join("")}
-function add(i){let f=foods[i],x=cartData.find(a=>a.name===f[0]);if(x)x.qty++;else cartData.push({name:f[0],price:f[2],image:f[3],qty:1});drawCart();openCart()}
-function plus(n){let x=cartData.find(a=>a.name===n);if(x)x.qty++;drawCart()}
-function minus(n){let x=cartData.find(a=>a.name===n);if(!x)return;x.qty--;if(x.qty<1)cartData=cartData.filter(a=>a.name!==n);drawCart()}
-function removeIt(n){cartData=cartData.filter(a=>a.name!==n);drawCart()}
-function drawCart(){let count=cartData.reduce((s,x)=>s+x.qty,0);document.getElementById("count").textContent=count;document.getElementById("cartCount").textContent=count;let sub=cartData.reduce((s,x)=>s+x.price*x.qty,0),del=sub?40:0,plat=sub?15:0,tax=Math.round(sub*.05),total=sub+del+plat+tax;document.getElementById("items").innerHTML=cartData.length?cartData.map(x=>`<div class="cart-row"><img src="${x.image}"><div><h4>${x.name}</h4><div class="cart-price">₹${x.price}</div><div class="qty"><button onclick="minus(${JSON.stringify(x.name)})">−</button><b>${x.qty}</b><button onclick="plus(${JSON.stringify(x.name)})">+</button><button class="remove" onclick="removeIt(${JSON.stringify(x.name)})">Remove</button></div></div><b>₹${x.price*x.qty}</b></div>`).join(""):"<div class='empty'>Your cart is empty 🛒<br>Add something delicious!</div>";document.getElementById("summary").innerHTML=`<div class="line"><span>Subtotal</span><b>₹${sub}</b></div><div class="line"><span>Delivery Fee</span><b>₹${del}</b></div><div class="line"><span>Platform Fee</span><b>₹${plat}</b></div><div class="line"><span>GST (5%)</span><b>₹${tax}</b></div><div class="line total"><span>Total</span><b>₹${total}</b></div><button class="primary checkout" onclick="checkout()" ${cartData.length?"":"disabled"}>♛ Place Order</button><button class="clear" onclick="cartData=[];drawCart()">Clear Cart</button>`}
-function openCart(){document.getElementById("cart").classList.add("show");document.getElementById("overlay").classList.add("show")}
-function closeCart(){document.getElementById("cart").classList.remove("show");document.getElementById("overlay").classList.remove("show")}
-function checkout(){if(!cartData.length)return;let sub=cartData.reduce((s,x)=>s+x.price*x.qty,0),total=sub+40+15+Math.round(sub*.05);alert("🎉 Order confirmed!\\n\\n📍 Chennai\\n💰 Total: ₹"+total);cartData=[];drawCart();closeCart()}
-document.getElementById("openCart").onclick=openCart;document.getElementById("close").onclick=closeCart;document.getElementById("overlay").onclick=closeCart;document.getElementById("search").oninput=render;renderCats();render();drawCart();
+const esc=s=>String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+function saveCart(){ localStorage.setItem("cravecraftersCart",JSON.stringify(cartData)); }
+function totalItems(){ return cartData.reduce((sum,item)=>sum+item.qty,0); }
+function findItem(name){ return cartData.find(item=>item.name===name); }
+
+function renderCats(){
+  $("cats").innerHTML=cats.map((c,i)=>`<button class="category ${i===0?"active":""}" data-category="${esc(c)}"><div class="icon">${({All:"♛","North Indian":"🍛","South Indian":"🥘","Chinese":"🥢","Pizza":"🍕","Burgers":"🍔","Fast Food":"🍟","Drinks":"🥤","Desserts":"🍰","Healthy":"🌿"})[c]||"🍽️"}</div>${esc(c)}</button>`).join("");
+}
+function choose(c,btn){
+  document.querySelectorAll(".category").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active"); selected=c; render();
+}
+function render(){
+  const q=$("search").value.trim().toLowerCase();
+  const list=foods.filter(x=>(selected==="All"||x[1]===selected)&&x[0].toLowerCase().includes(q));
+  $("grid").innerHTML=list.map(x=>{
+    const i=foods.indexOf(x);
+    return `<article class="card"><div class="pic"><img src="${x[3]}" alt="${esc(x[0])}" onerror="this.src='https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=800&q=80'"><span class="tag">${esc(x[4])}</span><button class="heart" type="button">♡</button></div><div class="body"><h3>${esc(x[0])}</h3><div class="category-text">${esc(x[1])}</div><div class="rating">★ 4.7 • 20–35 mins</div><div class="price">₹${x[2]}</div><button class="add" type="button" data-add="${i}">♛ Add to Cart</button></div></article>`;
+  }).join("");
+}
+function addItem(index){
+  const f=foods[index];
+  if(!f) return;
+  const existing=findItem(f[0]);
+  if(existing) existing.qty+=1;
+  else cartData.push({name:f[0],price:Number(f[2]),image:f[3],qty:1});
+  saveCart(); drawCart(); openCart();
+}
+function changeQty(name,delta){
+  const item=findItem(name); if(!item) return;
+  item.qty+=delta;
+  if(item.qty<=0) cartData=cartData.filter(x=>x.name!==name);
+  saveCart(); drawCart();
+}
+function removeItem(name){
+  cartData=cartData.filter(x=>x.name!==name); saveCart(); drawCart();
+}
+function clearCart(){
+  if(!cartData.length) return;
+  cartData=[]; saveCart(); drawCart();
+}
+function drawCart(){
+  const count=totalItems();
+  $("count").textContent=count;
+  $("cartCount").textContent=count;
+  const sub=cartData.reduce((sum,x)=>sum+x.price*x.qty,0);
+  const del=sub===0?0:(sub>=299?0:40);
+  const plat=sub===0?0:15;
+  const tax=Math.round(sub*0.05);
+  const total=sub+del+plat+tax;
+
+  $("items").innerHTML=cartData.length ? cartData.map(x=>`
+    <div class="cart-row">
+      <img src="${x.image}" alt="${esc(x.name)}" onerror="this.src='https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=300&q=80'">
+      <div>
+        <h4>${esc(x.name)}</h4>
+        <div class="cart-price">₹${x.price} each</div>
+        <div class="qty">
+          <button type="button" data-minus="${esc(x.name)}">−</button>
+          <b>${x.qty}</b>
+          <button type="button" data-plus="${esc(x.name)}">+</button>
+          <button type="button" class="remove" data-remove="${esc(x.name)}">Remove</button>
+        </div>
+      </div>
+      <b>₹${x.price*x.qty}</b>
+    </div>`).join("") : `<div class="empty">Your cart is empty 🛒<br>Add something delicious!</div>`;
+
+  $("summary").innerHTML=`
+    <div class="line"><span>Subtotal</span><b>₹${sub}</b></div>
+    <div class="line"><span>Delivery Fee</span><b>${del?"₹"+del:"FREE"}</b></div>
+    <div class="line"><span>Platform Fee</span><b>${plat?"₹"+plat:"₹0"}</b></div>
+    <div class="line"><span>GST (5%)</span><b>₹${tax}</b></div>
+    <div class="line total"><span>Total</span><b>₹${total}</b></div>
+    <button class="primary checkout" id="checkoutBtn" type="button" ${cartData.length?"":"disabled"}>♛ Place Order</button>
+    <button class="clear" id="clearBtn" type="button" ${cartData.length?"":"disabled"}>Clear Cart</button>`;
+
+  $("checkoutBtn").onclick=checkout;
+  $("clearBtn").onclick=clearCart;
+}
+function openCart(){ $("cart").classList.add("show"); $("overlay").classList.add("show"); }
+function closeCart(){ $("cart").classList.remove("show"); $("overlay").classList.remove("show"); }
+function checkout(){
+  if(!cartData.length) return;
+  const sub=cartData.reduce((sum,x)=>sum+x.price*x.qty,0);
+  const del=sub>=299?0:40, plat=15, tax=Math.round(sub*.05), total=sub+del+plat+tax;
+  $("orderItems").textContent=totalItems();
+  $("orderTotal").textContent="₹"+total;
+  $("orderModal").classList.add("show");
+  cartData=[]; saveCart(); drawCart(); closeCart();
+}
+
+$("grid").addEventListener("click",e=>{
+  const btn=e.target.closest("[data-add]"); if(btn) addItem(Number(btn.dataset.add));
+});
+$("cats").addEventListener("click",e=>{
+  const btn=e.target.closest("[data-category]"); if(btn) choose(btn.dataset.category,btn);
+});
+$("items").addEventListener("click",e=>{
+  const plus=e.target.closest("[data-plus]");
+  const minus=e.target.closest("[data-minus]");
+  const remove=e.target.closest("[data-remove]");
+  if(plus) changeQty(plus.dataset.plus,1);
+  else if(minus) changeQty(minus.dataset.minus,-1);
+  else if(remove) removeItem(remove.dataset.remove);
+});
+$("openCart").onclick=openCart;
+$("close").onclick=closeCart;
+$("overlay").onclick=closeCart;
+$("orderOk").onclick=()=>$("orderModal").classList.remove("show");
+$("orderModal").addEventListener("click",e=>{if(e.target.id==="orderModal")$("orderModal").classList.remove("show")});
+$("search").oninput=render;
+
+renderCats(); render(); drawCart();
 </script>
 </body>
 </html>
